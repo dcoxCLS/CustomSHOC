@@ -1,14 +1,5 @@
 :root{
-  --ion-font-family:  'Lato', sans-serif;
-  --ion-color-favorite: #CC6131;
-  --ion-color-favorite-contrast: #FFFFFF;
   --calcite-navigation-background-color: #285756;
-  --ion-color-white: #FFFFFF;
-  --ion-color-locate: #FFFFFF;
-  --ion-color-green:  #69bb7b;
-  --ion-color-red:  #e00000;
-  --ion-color-gray: #363636;
-  --ion-color-tour: #4B006E;
 }
 body {
   height: 100%;
@@ -25,4 +16,7 @@ h2, h3{
 }
 p{
   font-family: helvetica
+}
+calcite-navigation{
+  --calcite-navigation-background-color: #285756;
 }
