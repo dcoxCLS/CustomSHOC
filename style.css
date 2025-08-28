@@ -1,0 +1,32 @@
+:root{
+  --ion-font-family:  'Lato', sans-serif;
+  --ion-color-favorite: #CC6131;
+  --ion-color-favorite-contrast: #FFFFFF;
+  --ion-color-header: #285756;
+  --ion-color-white: #FFFFFF;
+  --ion-color-locate: #FFFFFF;
+  --ion-color-green:  #69bb7b;
+  --ion-color-red:  #e00000;
+  --ion-color-gray: #363636;
+  --ion-color-tour: #4B006E;
+}
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.noPadNoMarg{
+  padding: 0;
+  margin: 0;
+}
+h2, h3{
+  color: #660000;
+  font-family:avenir;
+}
+p{
+  font-family: helvetica
+}
+calcite-navigation{
+  --calcite-navigation-background-color: var(--ion-color-header:);
+  
+}
