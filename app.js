@@ -1,30 +1,95 @@
-  const opacityInput = document.getElementById('sliderDiv');
+ const opacityInput = document.getElementById('sliderDiv');
 
 			const FeatureLayer = await $arcgis.import("@arcgis/core/layers/FeatureLayer.js");
             const TileLayer = await $arcgis.import("@arcgis/core/layers/TileLayer.js");
-
 			const viewElement = document.querySelector("arcgis-map");
 			const selectFilter = document.querySelector("#sqlSelect");
+			const dateSlider = document.querySelector("#dateSlider");
 			const defaultOption = document.querySelector("#defaultOption");
+			const pointsFilterMenu = document.querySelector("#pointsFilter");
+			const pointsSwitch = document.querySelector("calcite-switch");
+			const defaultFilter = document.querySelector("#defaultFilter");
 			let whereClause = defaultOption.value;
 			const zoom = viewElement.zoom;
 
 			viewElement.addEventListener("arcgisViewReadyChange", () => {
+    // All layer, popup, and event listener declarations should go here
 
-				//dynamically update dropdown
-				//event listener for when the extent of the map changes
-				viewElement.addEventListener("arcgisViewChange", (event) => {
-					queryCount(viewElement.extent);
-				});
+    // Define popup for points layer
+    const popupPoints = {
+        title: "{RESNAME}",
+        content:
+            "Street Address: {Address}<br>Municipality: {City}<br>URL: <a href={NARA_URL}>View URL</a>",
+    };
+    
+    // Define points layer
+    const pointsLayer = new FeatureLayer({
+        url: "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0",
+        outFields: ["RESNAME", "Address", "City", "NARA_URL", "Is_NHL", "STATUS"],
+        popupTemplate: popupPoints,
+    });
+    
+    viewElement.map.add(pointsLayer, 1);
 
-				function queryCount(extent) {
-					selectFilter.innerHTML = '<calcite-option id="defaultOption" value="1=0" label="Choose a historic map"></calcite-option>';
-					const parcelQuery = {
-						spatialRelationship: "intersects", // Relationship operation to apply
-						geometry: extent, // Restricted to visible extent of the map
-						outFields: ["title", "mapyear", "service_url"], // Attributes to return
-						returnGeometry: true,
-					};
+    // All event listeners are now consolidated in one place
+    viewElement.addEventListener("arcgisViewChange", (event) => {
+        queryCount(viewElement.extent);
+    });
+    
+    dateSlider.addEventListener("calciteSliderChange", (event) => {
+        queryCount(viewElement.extent);
+    });
+
+    pointsSwitch.addEventListener("calciteSwitchChange", () => {
+        pointsLayer.visible = pointsSwitch.checked;
+    });
+pointsFilterMenu.addEventListener("change", (event) => {
+    // Get the ID of the checked radio button, which corresponds to the filter value
+    const selectedValue = event.target.id;
+    console.log("Selected value: " + selectedValue);
+
+    let pointsFilterExpression = "";
+
+    switch (selectedValue) {
+        case "NHL":
+            pointsFilterExpression = "Is_NHL IS NOT NULL AND STATUS = 'Listed'";
+            break;
+        case "NRHP":
+            pointsFilterExpression = "Is_NHL IS NULL AND STATUS = 'Listed'";
+            break;
+        case "removed":
+            pointsFilterExpression = "STATUS = 'Removed'";
+            break;
+        case "both":
+        default:
+            pointsFilterExpression = "1=1";
+            break;
+    }
+    
+    // Check if pointsLayer is defined before applying the filter
+    if (pointsLayer) {
+        pointsLayer.definitionExpression = pointsFilterExpression;
+    }
+});
+        
+});
+
+//  dynamically populate historic map dropdown
+
+function queryCount(extent) {
+    selectFilter.innerHTML = '<calcite-option id="defaultOption" value="1=0" label="Choose a historic map"></calcite-option>';
+    const minYear = dateSlider.minValue;
+    const maxYear = dateSlider.maxValue;
+    console.log(`Filtering maps from ${minYear} to ${maxYear}`);
+    const mapYearFilter = `CAST(mapyear AS INTEGER) >= ${minYear} AND CAST(mapyear AS INTEGER) <= ${maxYear}`;
+    
+    const parcelQuery = {
+        where: mapYearFilter,
+        spatialRelationship: "intersects",
+        geometry: extent,
+        outFields: ["title", "mapyear", "service_url", "source_description", "mapday", "mapmonth", "publisher", "author", "cartographer_surveyor", "orig_repository"],
+        returnGeometry: true,
+    };
 
 					parcelLayer
 						.queryFeatures(parcelQuery)
@@ -43,13 +108,14 @@
 							sortedFeatures.forEach((feature) => {
 							const year = feature.attributes.mapyear;
 							const title = feature.attributes.title;
+							const service_url = feature.attributes.service_url;
 
 							if (seenYears.has(year)) return;
 							seenYears.add(year);
 
 							const option = document.createElement("calcite-option");
 							option.setAttribute("label", `${year} ${title}`);
-							option.setAttribute("value", `mapyear = '${year}'`);
+							option.setAttribute("value", `service_url = '${service_url}'`);
 							selectFilter.appendChild(option);
 							});
 
@@ -73,12 +139,12 @@
 				});
 
 				function queryFeatureLayer(extent) {
-                    viewElement.map.layers.removeAll();
+                    viewElement.map.remove(tileLayer);
 					const parcelQuery = {
 						where: whereClause, // Set by select element
 						spatialRelationship: "intersects", // Relationship operation to apply
 						geometry: extent, // Restricted to visible extent of the map
-						outFields: ["title", "mapyear", "service_url"], // Attributes to return
+						outFields: ["title", "mapyear", "service_url", "source_description", "mapday", "mapmonth", "publisher", "author", "cartographer_surveyor", "orig_repository"], // Attributes to return
 						returnGeometry: true,
 					};
 
@@ -118,9 +184,8 @@ let tileLayer; // Declare this BEFORE displayResults is defined
                     opacity: initialOpacity,
                     });
 
-                viewElement.map.add(tileLayer);
-
-					const symbol = {
+                viewElement.map.add(tileLayer,0);
+				const symbol = {
 						type: "simple-fill",
 						color: [20, 130, 200, 0],
 						outline: {
@@ -128,12 +193,11 @@ let tileLayer; // Declare this BEFORE displayResults is defined
 							width: 0.5,
 						},
 					};
-
                     //popup
 					const popupTemplate = {
-						title: "{title} {mapyear}",
+						title: "{mapyear} {title}",
 						content:
-							"Maker: {title} <br> Year: {mapyear} <br> <a href={service_url}>View Service URL</a>",
+							"Title: {title}<br>Date: {mapmonth}/{mapday}/{mapyear}<br>Description: {source_description}<br>Publisher: {publisher}<br>Author: {author}<br>Cartographer/Surveyor: {cartographer_surveyor}<br>Original Repository: {orig_repository}<br><a href={service_url}>View Service URL</a>",
 					}      
 
 					// Assign styles and popup to features
@@ -150,14 +214,15 @@ let tileLayer; // Declare this BEFORE displayResults is defined
 					// Add features to graphics layer
 					viewElement.graphics.addMany(results.features);
 				}
-                opacityInput.addEventListener('mouseup', function() {
+opacityInput.addEventListener('mouseup', function() {
     if (this.value > 0) {
         console.log("Range Slider has value of " + this.value);
         if (tileLayer) {
-        tileLayer.opacity = parseFloat(this.value) / 100;
+            tileLayer.opacity = parseFloat(this.value) / 100;
         }
     } else{
         console.log("Range Slider has value of " + this.value);
     }
 });
-});
+  const rangeInput = document.getElementById('sliderDiv');
+  const rangeOutput = document.getElementById('rangeValue');
