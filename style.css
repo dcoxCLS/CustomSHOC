@@ -1,50 +1,31 @@
-body {
-  height: 100%;
-  margin: 0;
-}
+$form-range-track-width: 100%;
+$form-range-thumb-width: 1rem;
+$form-range-track-bg: red;
 
-.noPadNoMarg{
+body{
+	height: 100vh;
+	padding: 0;
+ 	margin: 0;
+}
+.navbar, .navbar-brand{
   padding: 0;
   margin: 0;
 }
-h2, h3{
-  color: #660000;
-  font-family:avenir;
+.logo {
+	height: 100%;
+    margin: 0 5 0 0;
+    object-fit: contain; /* Optional: control how the image fits within its bounds */
+    }
+.dropdown-menu-right {
+    right: 0;
+    left: auto;
 }
-p{
-  font-family: helvetica
+.h-7{
+	height: 7%;
 }
-/* Dark theme customization */
-.calcite-mode-light {
-    /* Brand colors for primary actions */
-    --calcite-ui-brand: #d6b9eb;
-    --calcite-ui-brand-hover: #c59cd6;
-    --calcite-ui-brand-press: #b399c4;
-
-    /* Background colors for layout */
-    --calcite-ui-background: #3e3342;
-    --calcite-ui-foreground-1: #2e2933;
-    --calcite-ui-foreground-2: #2b262c;
-    --calcite-ui-foreground-3: #1b181b;
-
-    /* Status colors for feedback */
-    --calcite-ui-info: #be3dc4;
-    --calcite-ui-success: #28d258;
-    --calcite-ui-warning: #ff9900;
-    --calcite-ui-danger: #fe3e7e;
-    --calcite-ui-danger-hover: #ff004c;
-    --calcite-ui-danger-press: #db005b;
-
-    /* Text colors for content */
-    --calcite-ui-text-1: #fef2ff;
-    --calcite-ui-text-2: #fef5ff;
-    --calcite-ui-text-3: #faf0f9;
-    --calcite-ui-text-inverse: #1a0416;
-    --calcite-ui-text-link: #872686;
-
-    /* Border colors for separation */
-    --calcite-ui-border-1: #373239;
-    --calcite-ui-border-2: #413941;
-    --calcite-ui-border-3: #463e47;
-    --calcite-ui-border-input: #49434c;
+.h-86{
+	height:86%;
 }
+.menu-end{
+	margin-left:auto;
+	margin-right:0;}
