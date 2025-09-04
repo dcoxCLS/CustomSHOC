@@ -22,11 +22,67 @@
             "Street Address: {Address}<br>Municipality: {City}<br>URL: <a href={NARA_URL}>View URL</a>",
     };
     
+const points = {
+    type: "unique-value",
+    field: "Is_NHL",
+    field2: "STATUS",
+    fieldDelimiter: ",",
+    uniqueValueInfos: [{
+        value: "X,Listed",
+        symbol: {
+            type: "simple-marker", // Added type
+            style: "circle",
+            color: [0, 112, 255, 255],
+            size: 10.0,
+            angle: 0.0,
+            xoffset: 0,
+            yoffset: 0,
+            outline: { // Corrected outline object
+                color: [0, 112, 255, 255],
+                width: 1
+            }
+        }
+    },
+    {
+        value: "<Null>,Listed",
+        symbol: {
+            type: "simple-marker", // Added type
+            style: "circle",
+            color: [255, 170, 0, 255],
+            size: 10.0,
+            angle: 0.0,
+            xoffset: 0,
+            yoffset: 0,
+            outline: { // Corrected outline object
+                color: [255, 170, 0, 255],
+                width: 1
+            }
+        }
+    },
+    {
+        value: "<Null>,Removed", // Added a new unique value for "Removed"
+        symbol: {
+            type: "simple-marker",
+            style: "circle",
+            color: "gray",
+            size: 10.0,
+            angle: 0.0,
+            xoffset: 0,
+            yoffset: 0,
+            outline: {
+                color: "gray",
+                width: 1
+            }
+        }
+    }]
+};
+    
     // Define points layer
     const pointsLayer = new FeatureLayer({
         url: "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0",
         outFields: ["RESNAME", "Address", "City", "NARA_URL", "Is_NHL", "STATUS"],
         popupTemplate: popupPoints,
+        renderer: points,
     });
     
     viewElement.map.add(pointsLayer, 1);
@@ -47,7 +103,16 @@ pointsFilterMenu.addEventListener("change", (event) => {
     // Get the ID of the checked radio button, which corresponds to the filter value
     const selectedValue = event.target.id;
     console.log("Selected value: " + selectedValue);
+    
+     // Update active button styling
+        const buttons = pointsFilterMenu.querySelectorAll('label');
+        buttons.forEach(button => {
+            button.classList.remove('active');
+        });
 
+// Add the 'active' class to the parent label of the clicked input
+        event.target.closest('label').classList.add('active');
+        
     let pointsFilterExpression = "";
 
     switch (selectedValue) {
@@ -139,81 +204,102 @@ function queryCount(extent) {
 				});
 
 				function queryFeatureLayer(extent) {
-                    viewElement.map.remove(tileLayer);
-					const parcelQuery = {
-						where: whereClause, // Set by select element
-						spatialRelationship: "intersects", // Relationship operation to apply
-						geometry: extent, // Restricted to visible extent of the map
-						outFields: ["title", "mapyear", "service_url", "source_description", "mapday", "mapmonth", "publisher", "author", "cartographer_surveyor", "orig_repository"], // Attributes to return
-						returnGeometry: true,
-					};
+				
+				// If the default option is selected, remove the tile layer and exit
+    if (whereClause === '1=0') {
+        if (tileLayer) {
+            viewElement.map.remove(tileLayer);
+        }
+        // This line is crucial to ensure the historic map is not loaded
+        viewElement.graphics.removeAll();
+        return;
+    }
+				
+    const parcelQuery = {
+        where: whereClause,
+        spatialRelationship: "intersects",
+        geometry: extent,
+        outFields: ["title", "mapyear", "service_url", "source_description", "mapday", "mapmonth", "publisher", "author", "cartographer_surveyor", "orig_repository"],
+        returnGeometry: true,
+    };
 
-					parcelLayer
-						.queryFeatures(parcelQuery)
-						.then((results) => {
+    parcelLayer
+        .queryFeatures(parcelQuery)
+        .then((results) => {
+            console.log("Feature count: " + results.features.length);
+            displayResults(results);
+        })
+        .catch((error) => {
+            console.log(error.error);
+        });
+}
 
-							console.log("Feature count: " + results.features.length);
+let tileLayer;
 
-							displayResults(results);
+function displayResults(results) {
+    const service_url = results.features[0]?.attributes?.service_url;
 
-						})
-						.catch((error) => {
-							console.log(error.error);
-						});
+    if (!service_url) {
+        console.error("No service_url found in feature attributes.");
+        return;
+    }
 
-				}
-let tileLayer; // Declare this BEFORE displayResults is defined
+    // Remove previous tile layer if it exists
+    if (tileLayer) {
+        viewElement.map.remove(tileLayer);
+    }
+    
+    // Remove the points layer before adding the new tile layer, so we can re-add it on top
+    const existingPointsLayer = viewElement.map.layers.find(layer => layer.id === "pointsLayer");
+    if (existingPointsLayer) {
+        viewElement.map.remove(existingPointsLayer);
+    }
 
-                function displayResults(results) {
-                const service_url = results.features[0]?.attributes?.service_url;
+    const initialOpacity = parseFloat(opacityInput.value) / 100;
 
-                if (!service_url) {
-                    console.error("No service_url found in feature attributes.");
-                    return;
-                }
+    tileLayer = new TileLayer({
+        url: service_url,
+        opacity: initialOpacity,
+    });
 
-                // Remove previous tile layer if it exists
-                if (tileLayer) {
-                    viewElement.map.remove(tileLayer);
-                }
+    // Add the tile layer first, at the bottom of the stack
+    viewElement.map.add(tileLayer, 0);
 
-                const initialOpacity = parseFloat(opacityInput.value) / 100;
+    // Re-add the points layer on top of the tile layer
+    const pointsLayer = new FeatureLayer({
+        url: "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0",
+        outFields: ["RESNAME", "Address", "City", "NARA_URL", "Is_NHL", "STATUS"],
+        popupTemplate: popupPoints,
+        renderer: points,
+        id: "pointsLayer" // Give the layer an ID for easy referencing
+    });
+    viewElement.map.add(pointsLayer, 1);
 
-                tileLayer = new TileLayer({
-                    url: service_url,
-                    opacity: initialOpacity,
-                    });
+    const symbol = {
+        type: "simple-fill",
+        color: [20, 130, 200, 0],
+        outline: {
+            color: [20, 130, 200, 0],
+            width: 0.5,
+        },
+    };
 
-                viewElement.map.add(tileLayer,0);
-				const symbol = {
-						type: "simple-fill",
-						color: [20, 130, 200, 0],
-						outline: {
-							color: [20, 130, 200, 0],
-							width: 0.5,
-						},
-					};
-                    //popup
-					const popupTemplate = {
-						title: "{mapyear} {title}",
-						content:
-							"Title: {title}<br>Date: {mapmonth}/{mapday}/{mapyear}<br>Description: {source_description}<br>Publisher: {publisher}<br>Author: {author}<br>Cartographer/Surveyor: {cartographer_surveyor}<br>Original Repository: {orig_repository}<br><a href={service_url}>View Service URL</a>",
-					}      
+    const popupTemplate = {
+        title: "{mapyear} {title}",
+        content:
+            "Title: {title}<br>Date: {mapmonth}/{mapday}/{mapyear}<br>Description: {source_description}<br>Publisher: {publisher}<br>Author: {author}<br>Cartographer/Surveyor: {cartographer_surveyor}<br>Original Repository: {orig_repository}<br><a href={service_url}>View Service URL</a>",
+    };
 
-					// Assign styles and popup to features
-					results.features.map((feature) => {
-						feature.symbol = symbol;
-						feature.popupTemplate = popupTemplate;
-						return feature;
-					});
+    results.features.map((feature) => {
+        feature.symbol = symbol;
+        feature.popupTemplate = popupTemplate;
+        return feature;
+    });
 
-
-					// Clear display
-					viewElement.closePopup();
-					viewElement.graphics.removeAll();
-					// Add features to graphics layer
-					viewElement.graphics.addMany(results.features);
-				}
+    viewElement.closePopup();
+    viewElement.graphics.removeAll();
+    viewElement.graphics.addMany(results.features);
+}
 opacityInput.addEventListener('mouseup', function() {
     if (this.value > 0) {
         console.log("Range Slider has value of " + this.value);
