@@ -8,42 +8,6 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<style>
-$form-range-track-width: 100%;
-$form-range-thumb-width: 1rem;
-$form-range-track-bg: red;
-
-body{
-	height: 100vh;
-	padding: 0;
- 	margin: 0;
-}
-.navbar, .navbar-brand{
-  padding: 0;
-  margin: 0;
-}
-.logo {
-	height: 100%;
-    margin: 0 5 0 0;
-    object-fit: contain; /* Optional: control how the image fits within its bounds */
-    }
-.dropdown-menu-right {
-    right: 0;
-    left: auto;
-}
-.h-7{
-	height: 7%;
-}
-.h-86{
-	height:86%;
-}
-.menu-end{
-	margin-left:auto;
-	margin-right:0;}
-	
-
-</style>
-		<!-- The esriConfig variable must be defined before adding the other esri libraries -->
 <script>
 
 	var esriConfig = {
@@ -107,23 +71,25 @@ body{
     <calcite-menu-item type="radio" text="Removed" label="removed" icon-start="locator"></calcite-menu-item>
     <calcite-menu-item type="radio" active text="Everything" id="defaultFilter" label="both" icon-start="globe"></calcite-menu-item>
 </calcite-menu>-->
-<div id="pointsFilter" role="group" aria-label="People and Places Menu" class="btn-group h-100 menu-end">
- <input type="radio" class="btn-check" name="btnradio" id="NHL" autocomplete="off">
-  <label class="" for="NHL">National Historic Landmark</label>
-
-  <input type="radio" class="btn-check" name="btnradio" id="NRHP" autocomplete="off">
-  <label class="" for="NRHP">National Register of Historic Places</label>
-
-  <input type="radio" class="btn-check" name="btnradio" id="removed" autocomplete="off">
-  <label class="btn" for="removed">Removed</label>
-    <input type="radio" class="btn-check" name="btnradio" id="both" autocomplete="off" checked>
-  <label class="btn" for="both">Everything</label>
+<div id="pointsFilter" role="group" aria-label="People and Places Menu" class="btn-group btn-group-toggle h-100 menu-end">
+    <label class="btn btn-primary text-center d-flex align-items-center" for="NHL">
+        <input type="radio" class="btn-check" name="btnradio" id="NHL" autocomplete="off">
+        National Historic Landmark
+    </label>
+    <label class="btn btn-primary text-center d-flex align-items-center" for="NRHP">
+        <input type="radio" class="btn-check" name="btnradio" id="NRHP" autocomplete="off">
+        National Register of Historic Places
+    </label>
+    <label class="btn btn-primary text-center active d-flex align-items-center" for="both">
+        <input type="radio" class="btn-check" name="btnradio" id="both" autocomplete="off" checked>
+        Everything
+    </label>
 </div>
 
 	</nav>
 	
 	<div class="h-86">
-	<arcgis-map basemap="satellite" center= "-79.939, 32.785" zoom= "14">
+	<arcgis-map basemap="streets" center= "-79.939, 32.785" zoom= "14">
 
 
 	<arcgis-zoom position="top-left"></arcgis-zoom>
