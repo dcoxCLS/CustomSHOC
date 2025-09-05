@@ -25,19 +25,19 @@
 	</head>
 
 	<body>	
-	<nav class="row d-flex navbar h-7">
+		<nav class="row d-flex navbar h-7" id="navRow1">
     <h1 class="navbar-brand">
         <img src="https://i.imgur.com/4l3a4n1.jpeg" alt="SHOC Logo" class="logo d-inline-block align-center">SHOC Desktop Version
     </h1>
 
     <div id="slider-container" class="w-100 col-md-8 h-100 py-1">
-        <label class="row w-100 d-inline-flex justify-content-center align-content-center">Historic Map Opacity
+        <label class="blah row w-100 d-inline-flex justify-content-center align-content-center">Historic Map Opacity
             <calcite-slider class="w-100" value="100" id="sliderDiv" label-ticks max-label="100" min-label="0" ticks="100"></calcite-slider>
         </label>
     </div>
 
-    <div class="dropdown menu-end rounded-0">
-        <button type="button" id="navbarDropdownMenuLink" style="height: 100%" class="btn nav-item dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <div class="dropdown menu-end">
+        <button type="button" id="navbarDropdownMenuLink" class="button2 h-100 btn nav-item rounded-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <img src="https://upload.wikimedia.org/wikipedia/commons/b/b2/Hamburger_icon.svg" alt="hamburger menu">
         </button>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
@@ -48,13 +48,20 @@
     </div>
 </nav>
 	
-	<nav class="row d-flex navbar h-7 ">
-    <div id="slider-container" class="menu-end w-100 col-md-3 h-100 py-1" ><label class="row w-100 d-inline-flex justify-content-center align-content-center">Historic Map Date Range
+	<nav class="row d-flex navbar h-7 justify-content-between" id="navRow2">
+	<!--<calcite-input class="pl-2 justify-item-start" icon="search" suffix-text= "Search" placeholder="Doesn't work yet"></calcite-input>-->
+	<div class="input-group col-3">
+  <input type="text" class="form-control rounded-0" placeholder="Doesn't work yet" aria-label="keyword" aria-describedby="basic-addon2">
+  <div class="input-group-append">
+    <button class="button2 h-100 btn rounded-0" type="button">Search</button>
+  </div>
+</div>
+    <div id="slider-container" class="w-100 col-md-3 h-100 py-1" ><label class=" row w-100 d-inline-flex justify-content-center align-content-center">Historic Map Date Range
         <calcite-slider class="w-100" id="dateSlider" min-value="1670" max-value="1950" min="1670" max="1950" label-handles></calcite-slider>
 	</label></div>
 	
 	
-	<div class="d-flex h-100 px-2 menu-end" style="background-color:#efefef">
+	<div class="button2 d-flex h-100 menu-end"><div class="px-2 py-4">
 	<calcite-label layout="inline">
         <calcite-switch value="True" checked></calcite-switch>
         <calcite-icon icon="pin-tear"/>
@@ -69,20 +76,20 @@
     <calcite-menu-item type="radio" text="Removed" label="removed" icon-start="locator"></calcite-menu-item>
     <calcite-menu-item type="radio" active text="Everything" id="defaultFilter" label="both" icon-start="globe"></calcite-menu-item>
 </calcite-menu>-->
-<div id="pointsFilter" role="group" aria-label="People and Places Menu" class="btn-group btn-group-toggle h-100 menu-end">
-    <label class="btn btn-primary text-center d-flex align-items-center" for="NHL">
+<div id="pointsFilter" role="group" aria-label="People and Places Menu" class="button1 btn-group btn-group-toggle h-100 menu-end">
+    <label class="btn button1 text-center d-flex align-items-center rounded-0" for="NHL">
         <input type="radio" class="btn-check" name="btnradio" id="NHL" autocomplete="off">
-        National Historic Landmark
+        Nat. Hist. Landmark <calcite-icon icon="user"/>
     </label>
-    <label class="btn btn-primary text-center d-flex align-items-center" for="NRHP">
+    <label class="btn text-center d-flex align-items-center rounded-0" for="NRHP">
         <input type="radio" class="btn-check" name="btnradio" id="NRHP" autocomplete="off">
-        National Register of Historic Places
+        Nat. Reg. of Hist. Places <calcite-icon icon="locator"/>
     </label>
-    <label class="btn btn-primary text-center active d-flex align-items-center" for="both">
+    <label class="btn text-center active d-flex align-items-center rounded-0" for="both">
         <input type="radio" class="btn-check" name="btnradio" id="both" autocomplete="off" checked>
-        Everything
+        Everything <calcite-icon icon="globe"/>
     </label>
-</div>
+</div><div>
 
 	</nav>
 	
@@ -108,7 +115,6 @@
 				</calcite-select>
 			</arcgis-placement>
 </arcgis-map></div>
-<!--</calcite-shell>-->
 	</body>
 <script src="app.js" type="module"></script>
 </html>
