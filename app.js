@@ -1,4 +1,4 @@
- const opacityInput = document.getElementById('sliderDiv');
+  const opacityInput = document.getElementById('sliderDiv');
 
 			const FeatureLayer = await $arcgis.import("@arcgis/core/layers/FeatureLayer.js");
             const TileLayer = await $arcgis.import("@arcgis/core/layers/TileLayer.js");
