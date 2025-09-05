@@ -1,11 +1,26 @@
-$form-range-track-width: 100%;
-$form-range-thumb-width: 1rem;
-$form-range-track-bg: red;
+:root{
+  /* Primary Colors */
+  --primary-color: #ffc814ff;
+  --secondary-color: #53c7d6ff;
+  --text-light: white;
+  --text-dark: #1f2b2bff;
+  --neutral-light: #334747;
+  --neutral-dark: #1f2b2bff;
 
+  /*calcite*/
+  --calcite-label-text-color:  #1f2b2bff;
+  --calcite-switch-background-color: white;
+  --calcite-switch-handle-background-color:  #1f2b2bff;
+  --calcite-slider-text-color:white;
+  --calcite-slider-track-fill-color:white;
+  --calcite-slider-handle-fill-color: #53c7d6ff;
+  --calcite-switch-background-color-hover: #ffc814ff;
+}
 body{
 	height: 100vh;
 	padding: 0;
  	margin: 0;
+ 	font-family: "Avenir";
 }
 .navbar, .navbar-brand{
   padding: 0;
@@ -27,5 +42,35 @@ body{
 	height:86%;
 }
 .menu-end{
-	margin-left:auto;
+	margin-left:0;
 	margin-right:0;}
+#navRow1{
+	background-color:var(--neutral-dark);
+}
+#navRow1 > h1{
+	color:var(--text-light);
+}
+#navRow2{
+	background-color:var(--neutral-light);
+
+}
+.button1 > label{
+	background-color:var(--primary-color);
+	color: var(--text-dark);
+}
+.button1 > input[type="radio"]:checked + label{
+	background-color:var(--secondary-color);
+}
+.button1 > label:hover{
+	background-color:var(--secondary-color);
+}
+.button2{
+	background-color:var(--secondary-color);
+	color: var(--text-dark);
+}
+label{
+	color: var(--text-light);
+}
+.input-group-append > .button2:hover{
+	background-color:var(--primary-color);
+}
