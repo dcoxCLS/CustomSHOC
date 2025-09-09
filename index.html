@@ -26,13 +26,13 @@
 
 	<body>	
 		<nav class="row d-flex navbar h-7" id="navRow1">
-    <h1 class="navbar-brand">
+    <h1 class="navbar-brand logo-title">
         <img src="https://i.imgur.com/4l3a4n1.jpeg" alt="SHOC Logo" class="logo d-inline-block align-center">SHOC Desktop Version
     </h1>
 
     <div id="slider-container" class="w-100 col-md-8 h-100 py-1">
         <label class="blah row w-100 d-inline-flex justify-content-center align-content-center">Historic Map Opacity
-            <calcite-slider class="w-100" value="100" id="sliderDiv" label-ticks max-label="100" min-label="0" ticks="100"></calcite-slider>
+            <calcite-slider class="w-100 h-50" value="100" id="sliderDiv" label-ticks max-label="100" min-label="0" ticks="100"></calcite-slider>
         </label>
     </div>
 
@@ -56,12 +56,12 @@
     <button class="button2 h-100 btn rounded-0" type="button">Search</button>
   </div>
 </div>
-    <div id="slider-container" class="w-100 col-md-3 h-100 py-1" ><label class=" row w-100 d-inline-flex justify-content-center align-content-center">Historic Map Date Range
-        <calcite-slider class="w-100" id="dateSlider" min-value="1670" max-value="1950" min="1670" max="1950" label-handles></calcite-slider>
+    <div id="slider-container" class="w-100 col-md-3 h-100 py-1" ><label class="row w-100 d-inline-flex justify-content-center align-content-center">Historic Map Date Range
+        <calcite-slider class="w-100 h-50" id="dateSlider" min-value="1670" max-value="1950" min="1670" max="1950" label-handles></calcite-slider>
 	</label></div>
 	
 	
-	<div class="button2 d-flex h-100 menu-end"><div class="px-2 py-4">
+	<div class="button2 d-flex align-items-center h-100 menu-end"><div class="px-2">
 	<calcite-label layout="inline">
         <calcite-switch value="True" checked></calcite-switch>
         <calcite-icon icon="pin-tear"/>
@@ -77,24 +77,29 @@
     <calcite-menu-item type="radio" active text="Everything" id="defaultFilter" label="both" icon-start="globe"></calcite-menu-item>
 </calcite-menu>-->
 <div id="pointsFilter" role="group" aria-label="People and Places Menu" class="button1 btn-group btn-group-toggle h-100 menu-end">
-    <label class="btn button1 text-center d-flex align-items-center rounded-0" for="NHL">
-        <input type="radio" class="btn-check" name="btnradio" id="NHL" autocomplete="off">
-        Nat. Hist. Landmark <calcite-icon icon="user"/>
+    <label class="btn button1 text-center d-flex align-items-center rounded-0" for="brick">
+        <input type="radio" class="btn-check" name="btnradio" id="brick" autocomplete="off">
+        <span class="d-flex align-items-center">
+           <calcite-icon icon="user"></calcite-icon>Brick
+        </span>
     </label>
-    <label class="btn text-center d-flex align-items-center rounded-0" for="NRHP">
-        <input type="radio" class="btn-check" name="btnradio" id="NRHP" autocomplete="off">
-        Nat. Reg. of Hist. Places <calcite-icon icon="locator"/>
+    <label class="btn text-center d-flex align-items-center rounded-0" for="wood">
+        <input type="radio" class="btn-check" name="btnradio" id="wood" autocomplete="off">
+        <span class="d-flex align-items-center">
+            <calcite-icon icon="locator"></calcite-icon>Wood
+        </span>
     </label>
-    <label class="btn text-center active d-flex align-items-center rounded-0" for="both">
+    <label class="btn active text-center d-flex align-items-center rounded-0" for="both">
         <input type="radio" class="btn-check" name="btnradio" id="both" autocomplete="off" checked>
-        Everything <calcite-icon icon="globe"/>
+        <span class="d-flex align-items-center">
+            <calcite-icon icon="globe"></calcite-icon>Everything
+        </span>
     </label>
-</div><div>
-
+</div>
 	</nav>
-	
 	<div class="h-86">
-	<arcgis-map basemap="streets" center= "-79.939, 32.785" zoom= "14">
+	<div id="feature-node"><h1>Points</h1><div id="pointsInfo">No point selected</div><hr><h1>Maps</h1><div id="mapsInfo">No map selected</div></div>
+	<arcgis-map basemap="streets" center= "-79.939, 32.785" zoom= "14" popup-dock-enabled>
 
 
 	<arcgis-zoom position="top-left"></arcgis-zoom>
