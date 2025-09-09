@@ -1,45 +1,66 @@
 :root{
-  /* Primary Colors */
+  /* Primary Colors 
   --primary-color: #ffc814ff;
   --secondary-color: #53c7d6ff;
   --text-light: white;
   --text-dark: #1f2b2bff;
   --neutral-light: #334747;
-  --neutral-dark: #1f2b2bff;
+  --neutral-dark: #1f2b2bff;*/
+  --primary-color: white;
+  --secondary-color: #bfa87c;
+  --text-light: #fefefe;
+  --text-dark: #1f2b2bff;
+  --neutral-light: #660000;
+  --neutral-dark: #79242f;
 
-  /*calcite*/
+  /*calcite
   --calcite-label-text-color:  #1f2b2bff;
   --calcite-switch-background-color: white;
   --calcite-switch-handle-background-color:  #1f2b2bff;
   --calcite-slider-text-color:white;
   --calcite-slider-track-fill-color:white;
   --calcite-slider-handle-fill-color: #53c7d6ff;
-  --calcite-switch-background-color-hover: #ffc814ff;
+  --calcite-switch-background-color-hover: #ffc814ff;*/
+  --calcite-label-margin-bottom: 1px;
+  --calcite-label-text-color:  #1f2b2bff;
+  --calcite-switch-background-color: #fefefe;
+  --calcite-switch-handle-background-color:  #1f2b2bff;
+  --calcite-slider-text-color:#fefefe;
+  --calcite-slider-track-fill-color:#fefefe;
+  --calcite-slider-handle-fill-color: #efbb3c;
+  --calcite-switch-background-color-hover: #660000;
 }
 body{
 	height: 100vh;
 	padding: 0;
  	margin: 0;
- 	font-family: "Avenir";
+ 	font-family: "avenir next";
 }
 .navbar, .navbar-brand{
   padding: 0;
   margin: 0;
+}
+.navbar, .navbar-brand > h1{
+  font-size: 18px; important!;
 }
 .logo {
 	height: 100%;
     margin: 0 5 0 0;
     object-fit: contain; /* Optional: control how the image fits within its bounds */
     }
+.logo-title{
+    font-family: "Caslon Pro";
+    font-size: 25px; important!;
+}
 .dropdown-menu-right {
     right: 0;
     left: auto;
 }
 .h-7{
-	height: 7%;
+	height: 6%;
 }
 .h-86{
-	height:86%;
+	height:88%;
 }
 .menu-end{
 	margin-left:0;
@@ -58,8 +79,9 @@ body{
 	background-color:var(--primary-color);
 	color: var(--text-dark);
 }
-.button1 > input[type="radio"]:checked + label{
-	background-color:var(--secondary-color);
+.button1 > .active{
+    background-color: var(--neutral-light) !important;
+    color: var(--text-light) !important;
 }
 .button1 > label:hover{
 	background-color:var(--secondary-color);
@@ -73,4 +95,23 @@ label{
 }
 .input-group-append > .button2:hover{
 	background-color:var(--primary-color);
+	color: var(--text-light) !important;
+}
+span > calcite-icon {
+	margin-right: 10px;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+#feature-node {
+        float: left;
+        width: 25vw;
+        height: 100%;
+        padding: 1em;
+        overflow: scroll;
+        display: none;
+      }
+arcgis-map {
+	float: right;
+	width: 100vw;
+	height: 100%
 }
