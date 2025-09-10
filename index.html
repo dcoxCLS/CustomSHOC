@@ -37,7 +37,7 @@
     </div>
 
     <div class="dropdown menu-end">
-        <button type="button" id="navbarDropdownMenuLink" class="button2 h-100 btn nav-item rounded-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button type="button" id="navbarDropdownMenuLink" class="button2 collapser h-100 btn nav-item rounded-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <img src="https://upload.wikimedia.org/wikipedia/commons/b/b2/Hamburger_icon.svg" alt="hamburger menu">
         </button>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
@@ -49,6 +49,18 @@
 </nav>
 	
 	<nav class="row d-flex navbar h-7 justify-content-between" id="navRow2">
+	       <div class="menu-end">
+	       <button type="button" id="expandCollapse" class="button2 collapser h-100 btn nav-item rounded-0" data-expanded="false">
+	        <svg id="expand-icon" style="display: block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708"/>
+        <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708"/>
+    </svg>
+    <svg id="collapse-icon" style="display: none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-double-right" viewBox="0 0 16 16">
+       <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+  <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+    </svg>
+</button>
+	       </div>
 	<!--<calcite-input class="pl-2 justify-item-start" icon="search" suffix-text= "Search" placeholder="Doesn't work yet"></calcite-input>-->
 	<div class="input-group col-3">
   <input type="text" class="form-control rounded-0" placeholder="Doesn't work yet" aria-label="keyword" aria-describedby="basic-addon2">
@@ -99,9 +111,7 @@
 	</nav>
 	<div class="h-86">
 	<div id="feature-node"><h1>Points</h1><div id="pointsInfo">No point selected</div><hr><h1>Maps</h1><div id="mapsInfo">No map selected</div></div>
-	<arcgis-map basemap="streets" center= "-79.939, 32.785" zoom= "14" popup-dock-enabled>
-
-
+	<arcgis-map basemap="streets" center= "-79.939, 32.785" zoom= "14">
 	<arcgis-zoom position="top-left"></arcgis-zoom>
 	<arcgis-home position="top-left"></arcgis-home>
 	<arcgis-locate position="top-left" scale="500"></arcgis-locate>
