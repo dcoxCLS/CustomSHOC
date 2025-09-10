@@ -12,8 +12,13 @@ const opacityInput = document.getElementById('sliderDiv');
 			let whereClause = defaultOption.value;
 			const zoom = viewElement.zoom;
 			const featureNode = document.querySelector("#feature-node");
+			const expandCollapse = document.querySelector("#expandCollapse");
 			let highlight;
           	let objectId;
+          	const collapseIcon = document.getElementById('collapse-icon');
+    		const expandIcon = document.getElementById('expand-icon');
+    		let clickedGraphic = null;
+			let currentHighlight = null;
 
 			viewElement.addEventListener("arcgisViewReadyChange", () => {
     // All layer, popup, and event listener declarations should go here
@@ -34,12 +39,12 @@ const opacityInput = document.getElementById('sliderDiv');
             type: "simple-marker", // Added type
             style: "circle",
             color: "#660000",
-            size: 5.0,
+            size: 7.0,
             angle: 0.0,
             xoffset: 0,
             yoffset: 0,
             outline: {
-                color: "#660000",
+                color: "#bfa87c",
                 width: 1
             }
         }
@@ -50,12 +55,12 @@ const opacityInput = document.getElementById('sliderDiv');
             type: "simple-marker",
             style: "circle",
             color: "#bfa87c",
-            size: 5.0,
+            size: 7.0,
             angle: 0.0,
             xoffset: 0,
             yoffset: 0,
             outline: {
-                color: "#bfa87c",
+                color: "#660000",
                 width: 1
             }
         }
@@ -140,7 +145,21 @@ viewElement.view.on("click", (event) => {
     	if (response.results.length > 0) {
     const graphic = response.results[0].graphic;
     const prefix = graphic.attributes;
-    
+    // Clear the previous highlight
+            if (currentHighlight) {
+                currentHighlight.remove();
+            }
+            
+ viewElement.view.whenLayerView(pointsLayer).then((layerView) => {
+                currentHighlight = layerView.highlight(graphic, {
+                    color: "red",
+                    haloColor: "white",
+                    haloOpacity: 0.8,
+                    width: 2
+                });
+            });
+             // Set the clicked graphic
+            clickedGraphic = graphic;
     // Check if the prefix object is defined before trying to access its properties
     if (prefix.orig_city !== undefined) {
         const contentHTML = `
@@ -156,20 +175,27 @@ viewElement.view.on("click", (event) => {
         featureNode.style.display = "block";
         featureNode.style.width= "25vw";
         viewElement.style.width="75vw";
+        collapseIcon.style.display = "block";
+        expandIcon.style.display = "none";
+        
         
     } else {
         pointsInfo.innerHTML = "No points selected";
-        featureNode.style.display = "none";
-        viewElement.style.width="100vw";
+        clickedGraphic = null;
+        //featureNode.style.display = "none";
+        //viewElement.style.width="100vw";
     }
 } else {
+if (currentHighlight) {
+                currentHighlight.remove();
+            }
     pointsInfo.innerHTML = "No points selected";
-    featureNode.style.display = "none";
-    viewElement.style.width="100vw";
+    //featureNode.style.display = "none";
+    //viewElement.style.width="100vw";
 }
     });
 });
-	
+
     viewElement.addEventListener("arcgisViewChange", (event) => {
         queryCount(viewElement.extent);
     });
@@ -215,7 +241,24 @@ pointsFilterMenu.addEventListener("change", (event) => {
         pointsLayer.definitionExpression = pointsFilterExpression;
     }
 });
-        
+
+expandCollapse.addEventListener('click', () => {
+
+    // Check if the featureNode is currently visible
+    if (featureNode.style.display === "block") {
+        // If it's visible, collapse it
+        featureNode.style.display = "none";
+        viewElement.style.width = "100vw";
+        collapseIcon.style.display = "none";
+        expandIcon.style.display = "block";
+    } else {
+        // If it's hidden, expand it
+        featureNode.style.display = "block";
+        viewElement.style.width = "75vw";
+        collapseIcon.style.display = "block";
+        expandIcon.style.display = "none";
+    }
+});
 });
 
 //  dynamically populate historic map dropdown
