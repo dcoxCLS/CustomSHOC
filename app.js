@@ -1,10 +1,10 @@
 const opacityInput = document.getElementById('sliderDiv');
+  const rangeOutput = document.getElementById('rangeValue');
 
 			const FeatureLayer = await $arcgis.import("@arcgis/core/layers/FeatureLayer.js");
             const TileLayer = await $arcgis.import("@arcgis/core/layers/TileLayer.js");
 			const viewElement = document.querySelector("arcgis-map");
 			const selectFilter = document.querySelector("#sqlSelect");
-			const dateSlider = document.querySelector("#dateSlider");
 			const defaultOption = document.querySelector("#defaultOption");
 			const pointsFilterMenu = document.querySelector("#pointsFilter");
 			const pointsSwitch = document.querySelector("calcite-switch");
@@ -19,10 +19,25 @@ const opacityInput = document.getElementById('sliderDiv');
     		const expandIcon = document.getElementById('expand-icon');
     		let clickedGraphic = null;
 			let currentHighlight = null;
+			const dateSlider_l = document.getElementById('dateSlider_l');
+            const dateSlider_r = document.getElementById('dateSlider_r');
+            const dateMinValue = document.getElementById('dateMinValue');
+            const dateMaxValue = document.getElementById('dateMaxValue');
 
 			viewElement.addEventListener("arcgisViewReadyChange", () => {
     // All layer, popup, and event listener declarations should go here
+viewElement.view.watch("extent", (extent) => {
+    debounceQuery(extent);
+});
 
+// A simple debounce function to limit how often a function is called
+let timeout;
+function debounceQuery(extent) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+        queryCount(extent);
+    }, 500); // Wait 500ms after the user stops panning/zooming
+}
     // Define popup for points layer
     const popupPoints = {
         title: "{orig_address_no} {orig_address_street}",
@@ -196,14 +211,8 @@ if (currentHighlight) {
     });
 });
 
-    viewElement.addEventListener("arcgisViewChange", (event) => {
-        queryCount(viewElement.extent);
-    });
     
-    dateSlider.addEventListener("calciteSliderChange", (event) => {
-        queryCount(viewElement.extent);
-    });
-
+    
     pointsSwitch.addEventListener("calciteSwitchChange", () => {
         pointsLayer.visible = pointsSwitch.checked;
     });
@@ -262,11 +271,10 @@ expandCollapse.addEventListener('click', () => {
 });
 
 //  dynamically populate historic map dropdown
-
 function queryCount(extent) {
     selectFilter.innerHTML = '<calcite-option id="defaultOption" value="1=0" label="Choose a historic map"></calcite-option>';
-    const minYear = dateSlider.minValue;
-    const maxYear = dateSlider.maxValue;
+    const minYear = dateSlider_l.value;
+    const maxYear = dateSlider_r.value;
     console.log(`Filtering maps from ${minYear} to ${maxYear}`);
     const mapYearFilter = `CAST(mapyear AS INTEGER) >= ${minYear} AND CAST(mapyear AS INTEGER) <= ${maxYear}`;
     
@@ -439,9 +447,10 @@ function displayResults(results) {
     viewElement.graphics.removeAll();
     viewElement.graphics.addMany(results.features);
 }
-opacityInput.addEventListener('mouseup', function() {
+opacityInput.addEventListener('input', function() {
     if (this.value > 0) {
         console.log("Range Slider has value of " + this.value);
+        rangeOutput.innerHTML = this.value + "%";
         if (tileLayer) {
             tileLayer.opacity = parseFloat(this.value) / 100;
         }
@@ -450,6 +459,35 @@ opacityInput.addEventListener('mouseup', function() {
     }
 });
 
+let sliderTimeout;
 
-  const rangeInput = document.getElementById('sliderDiv');
-  const rangeOutput = document.getElementById('rangeValue');
+function updateSliders() {
+    let minVal = parseInt(dateSlider_l.value);
+    let maxVal = parseInt(dateSlider_r.value);
+
+    // Swap values if min exceeds max
+    if (minVal > maxVal) {
+        const temp = minVal;
+        minVal = maxVal;
+        maxVal = temp;
+    }
+
+    dateSlider_l.value = minVal;
+    dateSlider_r.value = maxVal;
+
+    dateMinValue.textContent = minVal;
+    dateMaxValue.textContent = maxVal;
+
+    // Clear the previous timeout to reset the debounce timer
+    clearTimeout(sliderTimeout);
+
+    // Set a new timeout to call queryCount after a brief delay
+    sliderTimeout = setTimeout(() => {
+        queryCount(viewElement.extent);
+    }, 300); // 300ms is a good delay for a smooth feel
+}
+
+dateSlider_l.addEventListener('input', updateSliders);
+dateSlider_r.addEventListener('input', updateSliders);
+
+updateSliders(); // Initial call to set the display values
