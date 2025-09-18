@@ -126,9 +126,10 @@
 	</nav>
 	<div class="h-86">
 	<div id="feature-node"><h1>Points</h1><div id="pointsInfo">No point selected</div><hr><h1>Maps</h1><div id="mapsInfo">No map selected</div></div>
-	<arcgis-map basemap="streets" center= "-79.939, 32.785" zoom= "14">
+<arcgis-map basemap="streets" center= "-79.939, 32.785" zoom= "13">
 	<arcgis-zoom position="top-left"></arcgis-zoom>
 	<arcgis-home position="top-left"></arcgis-home>
+
 	<arcgis-locate position="top-left" scale="500"></arcgis-locate>
       <arcgis-scale-bar
     position="bottom-left"
@@ -143,7 +144,11 @@
 						value="1=0"
 						label="Choose a historic map"></calcite-option>
 				</calcite-select>
-			</arcgis-placement>
+			</arcgis-placement>  <arcgis-compass position="top-left"></arcgis-compass>
+			<arcgis-basemap-toggle position="bottom-right"></arcgis-basemap-toggle>
+			  <arcgis-placement position="bottom-left">
+    <div class="map-floater">Right-click and drag to rotate map.</div>
+  </arcgis-placement>
 </arcgis-map></div>
 <!--</calcite-shell>-->
 	</body>
