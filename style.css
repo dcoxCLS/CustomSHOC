@@ -250,3 +250,6 @@ arcgis-map {
     white-space: nowrap;
     font-size: 1em;
 }
+.map-floater{
+background-color:var(--text-light);
+}
